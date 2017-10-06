@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour {
 
     public float speed = 5.0f;
     public float padding = 1;               //add padding to side of screen on player
+    public float spawnDelay = 0.5f;
 
     float xmin;
     float xmax;
@@ -28,7 +29,7 @@ public class EnemySpawner : MonoBehaviour {
         xmin = leftmost.x + padding;
         xmax = rightmost.x - padding;
 
-        Respawn();                                                                          //spawn the first group of enemies
+        SpawnUntilFull();                                                                      //spawn the first group of enemies
     }
 
 
@@ -44,6 +45,27 @@ public class EnemySpawner : MonoBehaviour {
             enemy.transform.parent = child;
         }
     }
+
+    void SpawnUntilFull()
+    {
+        
+        Transform freePosition = NextFreePosition();                                        //where will the enemy spawn
+
+        if (freePosition)                                                                   //only spawn if there is a free position
+        {
+            GameObject enemy = Instantiate(enemyPrefab, freePosition.position, Quaternion.identity) as GameObject;  //instaniate as a game object at the child position (child IS a position)
+                                                                                                                    //for tidiness, keeps this in the hierarchy under enemySpawner
+                                                                                                                    //as they spawn
+            enemy.transform.parent = freePosition;
+        }
+
+        //call self recursively only if there is a next free position
+        if (NextFreePosition()) {
+            Invoke("SpawnUntilFull", spawnDelay);                                               //call spwanuntil full every spawnDelay seconds                                                                             
+        }
+    }
+
+
 
     public void OnDrawGizmos()
     {
@@ -77,9 +99,22 @@ public class EnemySpawner : MonoBehaviour {
         if(AllMembersDead())
         {            
             Debug.Log("Empty Formation");
-            Respawn();
+            SpawnUntilFull();
         }
         
+    }
+
+    Transform NextFreePosition()
+    {
+        foreach (Transform childPositionGameObject in transform)              //this script is attached ot the enemy formation, which has a transform
+        {
+            if (childPositionGameObject.childCount == 0)                     //is the child count zero (enemy dead) at this position
+            {   
+                return childPositionGameObject;                             //if so, return the position game object
+            }
+        }
+
+        return null;
     }
 
     bool AllMembersDead()
