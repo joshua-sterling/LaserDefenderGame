@@ -8,6 +8,13 @@ public class Enemy : MonoBehaviour {
     public float projectileSpeed;
     public float health = 150;
     public float shotsPerSecond = 0.5f;                             //firing frequency
+    public int scoreValue = 150;
+    private ScoreKeeper scoreKeeper;
+
+    private void Start()
+    {
+       scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,6 +25,7 @@ public class Enemy : MonoBehaviour {
             missile.Hit();
             if(health <= 0)
             {
+                scoreKeeper.Score(scoreValue);
                 Destroy(gameObject);
             }
         }
