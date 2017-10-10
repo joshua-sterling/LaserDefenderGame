@@ -100,6 +100,9 @@ MonoBehaviour:
   projectileSpeed: -3
   health: 150
   shotsPerSecond: 0.5
+  scoreValue: 150
+  fireSound: {fileID: 8300000, guid: cdb64de83e3a78241a84b1d0622e6477, type: 3}
+  deathSound: {fileID: 8300000, guid: fb301b2149a2de647a739e4e755b10e6, type: 3}
 --- !u!212 &212296817195580678
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -129,8 +132,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 643090355
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bbfa6d847c37e0f4c9f074cc7a971fbd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

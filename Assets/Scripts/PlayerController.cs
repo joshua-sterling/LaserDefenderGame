@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour {
     public float padding = 1;               //add padding to side of screen on player
     public float projectileSpeed;
     public float fireRate = 0.2f;           //rate of fire
+    public AudioClip fireSound;             //sound of player firing, assigned in editor
+    
+    
 
     float xmin;
     float xmax;
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour {
         Vector3 startPos = transform.position + new Vector3(0, 1, 0);
         GameObject beam = Instantiate(laser, startPos, Quaternion.identity) as GameObject;       //instantiate as a gameobject so we can use them
         beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
+        AudioSource.PlayClipAtPoint(fireSound, transform.position);                             //call the audio at the player's transform position
     }
 
     // Update is called once per frame
@@ -72,9 +76,18 @@ public class PlayerController : MonoBehaviour {
             missile.Hit();
             if (health <= 0)
             {
-                Destroy(gameObject);
+                Die();
             }
         }
+    }
+
+    private void Die()
+    {
+        LevelManager man = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        
+        Destroy(gameObject);
+
+        man.LoadLevel("Win");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

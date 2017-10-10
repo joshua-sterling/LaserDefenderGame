@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour {
     public float shotsPerSecond = 0.5f;                             //firing frequency
     public int scoreValue = 150;
     private ScoreKeeper scoreKeeper;
+    public AudioClip fireSound;             //sound of enemy firing, assigned in editor
+    public AudioClip deathSound;            //enemy is destroyed
 
     private void Start()
     {
@@ -25,10 +27,16 @@ public class Enemy : MonoBehaviour {
             missile.Hit();
             if(health <= 0)
             {
-                scoreKeeper.Score(scoreValue);
-                Destroy(gameObject);
+                Die();
             }
         }
+    }
+
+    void Die()
+    {
+        scoreKeeper.Score(scoreValue);
+        AudioSource.PlayClipAtPoint(deathSound, transform.position);                             //call the audio at the enemy's transform position
+        Destroy(gameObject);
     }
 
     private void Fire()
@@ -36,6 +44,7 @@ public class Enemy : MonoBehaviour {
         Vector3 startPos = transform.position + new Vector3(0, -1, 0);                                  //offset so lasers form below enemy to avoid collision
         GameObject beam = Instantiate(projectile, startPos, Quaternion.identity) as GameObject;       //instantiate as a gameobject so we can use them
         beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
+        AudioSource.PlayClipAtPoint(fireSound, transform.position);                             //call the audio at the enemy's transform position
     }
 
     private void Update()
